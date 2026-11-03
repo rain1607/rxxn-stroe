@@ -1,0 +1,57 @@
+:root {
+  --ink: #2b2430;
+  --muted: #6f6670;
+  --bg: #fffbfc;
+  --blush: #fdf0f4;
+  --pink: #ffb5cc;
+  --rose: #e58bab;
+  --plum: #a33b68;
+  --line: #f3e3ea;
+  --line-strong: #e8d3dc;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'IBM Plex Sans Thai', system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+a { color: inherit; text-decoration: none; }
+a:hover { color: var(--plum); }
+button, input, select, textarea { font-family: inherit; }
+h1, h2, h3, p { margin: 0; }
+
+.page { max-width: 1280px; width: 100%; margin: 0 auto; padding: 40px 48px 80px; }
+.row { display: flex; flex-wrap: wrap; gap: 16px; }
+.col { display: flex; flex-direction: column; }
+.muted { color: var(--muted); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 0 24px; border: 0; border-radius: 14px;
+  background: var(--pink); color: var(--ink); font-size: 15px; font-weight: 600; cursor: pointer;
+}
+.btn:hover { color: var(--ink); filter: brightness(0.97); }
+.btn.ghost { background: #fff; border: 1px solid var(--line-strong); }
+.btn.big { min-height: 52px; font-size: 16px; }
+
+.chip {
+  display: inline-flex; align-items: center; min-height: 36px; padding: 0 16px;
+  border: 1px solid var(--line-strong); border-radius: 20px; background: transparent;
+  font-size: 13px; color: var(--ink); cursor: pointer;
+}
+.chip.on { border-color: var(--rose); background: #fff; }
+
+.card { padding: 24px; background: #fff; border: 1px solid var(--line); border-radius: 20px; }
+
+input[type='text'], input[type='number'], input[type='tel'], input[type='email'], select, textarea {
+  width: 100%; min-height: 48px; padding: 0 14px; border: 1px solid var(--line-strong);
+  border-radius: 14px; font-size: 16px; background: #fff; color: var(--ink);
+}
+textarea { padding: 12px 14px; min-height: 100px; resize: vertical; line-height: 1.6; }
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--rose); outline-offset: 1px; }
+label.f { display: flex; flex-direction: column; gap: 6px; font-size: 15px; font-weight: 500; }
+.hint { font-size: 13px; font-weight: 400; color: var(--muted); }
+
+.tile { position: relative; overflow: hidden; background: var(--blush); display: flex; align-items: center; justify-content: center; }
+.tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+@media (max-width: 720px) {
+  .page { padding: 24px 16px 64px; }
+}

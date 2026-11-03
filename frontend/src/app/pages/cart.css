@@ -1,0 +1,18 @@
+h1 { font-size: 36px; font-weight: 600; margin-bottom: 32px; }
+.layout { display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; }
+.items { flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; }
+.empty { padding: 48px 0; display: flex; flex-direction: column; gap: 16px; align-items: flex-start; font-size: 18px; }
+.line { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.thumb { width: 104px; height: 104px; flex: none; }
+.grow { flex: 1 1 200px; min-width: 0; font-size: 18px; }
+.small { font-size: 14px; }
+.qty { display: inline-flex; align-items: center; border: 1px solid var(--line-strong); border-radius: 14px; }
+.qty button { width: 44px; height: 44px; border: 0; background: transparent; font-size: 22px; cursor: pointer; }
+.qty span { min-width: 32px; text-align: center; font-weight: 600; }
+.total { min-width: 80px; text-align: right; font-size: 18px; }
+.x { width: 44px; height: 44px; border: 0; background: transparent; color: #767676; cursor: pointer; }
+.more { align-self: flex-start; display: inline-flex; align-items: center; min-height: 44px; margin-top: 16px; font-weight: 600; }
+.sum { flex: 1 1 320px; display: flex; flex-direction: column; gap: 16px; padding: 28px; }
+.sum h2 { font-size: 22px; }
+.between { display: flex; justify-content: space-between; font-size: 16px; }
+.grand { padding-top: 16px; border-top: 1px solid var(--line); font-size: 20px; font-weight: 600; }

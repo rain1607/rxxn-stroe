@@ -1,0 +1,281 @@
+openapi: 3.0.3
+info:
+  title: RXXN.STUDIO Store API
+  version: 1.0.0
+  description: |
+    API ร้านค้าออนไลน์ ออกแบบจากข้อมูล localStorage ของดีไซน์
+    - `ds.products.v2`  -> /products
+    - `ds.cart.v1`      -> /cart
+    - `ds.reviews.v1`   -> /products/{productId}/reviews
+    ฐานข้อมูล SQLite จัดการด้วย Prisma (backend/prisma/schema.prisma)
+servers:
+  - url: http://localhost:3000/api
+tags:
+  - name: Products
+  - name: Cart
+  - name: Reviews
+paths:
+  /products:
+    get:
+      tags: [Products]
+      summary: รายการสินค้าทั้งหมด (เรียงตาม order)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Product' }
+    post:
+      tags: [Products]
+      summary: เพิ่มสินค้าใหม่
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProductInput' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Product' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+  /products/{id}:
+    parameters:
+      - $ref: '#/components/parameters/ProductId'
+    get:
+      tags: [Products]
+      summary: รายละเอียดสินค้า
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Product' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    put:
+      tags: [Products]
+      summary: แก้ไขสินค้า (แทนที่ตัวเลือกสี/ขนาดทั้งหมด)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProductInput' }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Product' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      tags: [Products]
+      summary: ลบสินค้า (ลบรีวิวและรายการในตะกร้าที่เกี่ยวข้องด้วย)
+      responses:
+        '204': { description: No Content }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /products/{id}/reviews:
+    parameters:
+      - $ref: '#/components/parameters/ProductId'
+    get:
+      tags: [Reviews]
+      summary: รีวิวของสินค้า (ใหม่สุดก่อน)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Review' }
+    post:
+      tags: [Reviews]
+      summary: เขียนรีวิว
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ReviewInput' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Review' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /reviews/{id}:
+    delete:
+      tags: [Reviews]
+      summary: ลบรีวิว
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '204': { description: No Content }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /cart:
+    get:
+      tags: [Cart]
+      summary: ตะกร้าสินค้าพร้อมยอดรวม (ค่าจัดส่ง 50 บาทเมื่อมีสินค้า)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Cart' }
+    delete:
+      tags: [Cart]
+      summary: ล้างตะกร้า (หลังสั่งซื้อสำเร็จ)
+      responses:
+        '204': { description: No Content }
+  /cart/items:
+    post:
+      tags: [Cart]
+      summary: เพิ่มสินค้าลงตะกร้า (id ซ้ำจะบวกจำนวน)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CartAdd' }
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CartLine' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /cart/items/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: รูปแบบ {productId}-{colorIndex}-{sizeIndex}
+        schema: { type: string, example: p1-0-1 }
+    patch:
+      tags: [Cart]
+      summary: แก้จำนวนสินค้า
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [qty]
+              properties:
+                qty: { type: integer, minimum: 1 }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CartLine' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      tags: [Cart]
+      summary: ลบสินค้าออกจากตะกร้า
+      responses:
+        '204': { description: No Content }
+        '404': { $ref: '#/components/responses/NotFound' }
+components:
+  parameters:
+    ProductId:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, example: p1 }
+  responses:
+    BadRequest:
+      description: ข้อมูลไม่ถูกต้อง
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: ไม่พบข้อมูล
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+  schemas:
+    Error:
+      type: object
+      properties:
+        message: { type: string }
+    ProductInput:
+      type: object
+      required: [name]
+      properties:
+        id: { type: string, description: ไม่ส่งจะสร้างให้ (p+timestamp) }
+        order: { type: integer }
+        name: { type: string }
+        cat: { type: string, example: ถ้วย }
+        price: { type: integer, minimum: 0, description: ราคาปกติ (บาท) }
+        discount: { type: integer, minimum: 0, maximum: 90, description: ส่วนลดโปร 11.11 (%) }
+        bg: { type: string, example: '#FADCE4' }
+        fg: { type: string, example: '#2B2430' }
+        image: { type: string, description: URL หรือ data URL ของรูป }
+        rating: { type: number, minimum: 0, maximum: 5 }
+        reviews: { type: integer, minimum: 0, description: จำนวนรีวิวที่แสดงบนการ์ดสินค้า }
+        province: { type: string }
+        colors: { type: array, items: { type: string } }
+        sizes: { type: array, items: { type: string } }
+        desc: { type: string }
+        specs: { type: string, description: 'บรรทัดละ 1 รายการ รูปแบบ ชื่อ: ค่า' }
+    Product:
+      allOf:
+        - $ref: '#/components/schemas/ProductInput'
+        - type: object
+          required: [id, name, price]
+    Review:
+      type: object
+      required: [id, productId, author, rating, comment, createdAt]
+      properties:
+        id: { type: string }
+        productId: { type: string }
+        author: { type: string }
+        rating: { type: integer, minimum: 1, maximum: 5 }
+        comment: { type: string }
+        createdAt: { type: string, format: date-time }
+    ReviewInput:
+      type: object
+      required: [author, rating, comment]
+      properties:
+        author: { type: string }
+        rating: { type: integer, minimum: 1, maximum: 5 }
+        comment: { type: string }
+    CartAdd:
+      type: object
+      required: [productId]
+      properties:
+        productId: { type: string }
+        colorIndex: { type: integer, minimum: 0, default: 0 }
+        sizeIndex: { type: integer, minimum: 0, default: 0 }
+        qty: { type: integer, minimum: 1, default: 1 }
+    CartLine:
+      type: object
+      required: [id, productId, name, variant, price, qty]
+      properties:
+        id: { type: string, example: p1-0-1 }
+        productId: { type: string }
+        name: { type: string }
+        variant: { type: string, example: 'สี: เขียวเทา · ขนาด: 350 มล.' }
+        price: { type: integer, description: ราคาต่อชิ้นหลังลด }
+        qty: { type: integer, minimum: 1 }
+        bg: { type: string }
+        fg: { type: string }
+        img: { type: string }
+    Cart:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/CartLine' }
+        subtotal: { type: integer }
+        shipping: { type: integer }
+        total: { type: integer }

@@ -1,0 +1,16 @@
+.shell { min-height: 100vh; display: flex; flex-direction: column; }
+header {
+  position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; align-items: center;
+  justify-content: space-between; gap: 16px; padding: 16px 48px;
+  background: rgba(255, 251, 252, 0.92); border-bottom: 1px solid var(--line);
+}
+.logo { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
+.logo span { color: var(--rose); }
+nav { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 15px; }
+nav a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 14px; color: #7a6f78; }
+nav a.active { color: var(--ink); font-weight: 600; }
+nav a.cart-link { padding: 0 18px; background: var(--pink); color: var(--ink); font-weight: 600; }
+footer { margin-top: auto; padding: 28px 48px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+@media (max-width: 720px) {
+  header, footer { padding-left: 16px; padding-right: 16px; }
+}

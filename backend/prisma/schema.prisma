@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          String          @id
+  sortOrder   Int             @default(0)
+  name        String
+  category    String
+  price       Int
+  discount    Int             @default(0)
+  bg          String          @default("#FADCE4")
+  fg          String          @default("#2B2430")
+  image       String?
+  rating      Float           @default(0)
+  reviewCount Int             @default(0)
+  province    String          @default("")
+  description String          @default("")
+  specs       String          @default("")
+  options     ProductOption[]
+  reviews     Review[]
+  cartItems   CartItem[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+// ตัวเลือกสี / ขนาด ของสินค้า (SQLite ไม่มี array จึงแยกเป็นตาราง)
+model ProductOption {
+  id        Int     @id @default(autoincrement())
+  productId String
+  type      String // "color" | "size"
+  label     String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, type, label])
+}
+
+// เทียบกับ localStorage key ds.cart.v1
+model CartItem {
+  id        String   @id // รูปแบบ {productId}-{colorIndex}-{sizeIndex}
+  productId String
+  name      String
+  variant   String
+  price     Int // ราคาต่อชิ้นหลังลด ณ เวลาที่ใส่ตะกร้า
+  qty       Int
+  bg        String
+  fg        String
+  img       String?
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// เทียบกับ localStorage key ds.reviews.v1
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  author    String
+  rating    Int // 1-5
+  comment   String
+  createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}

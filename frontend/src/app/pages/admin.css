@@ -1,0 +1,16 @@
+.head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 28px; }
+h1 { font-size: 40px; font-weight: 600; }
+.small { font-size: 13px; }
+.layout { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.list { flex: 1 1 300px; max-width: 380px; min-width: 0; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+.row-item { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 64px; padding: 8px 12px; border: 2px solid var(--line); border-radius: 16px; background: #fff; cursor: pointer; text-align: left; color: var(--ink); font-size: 15px; }
+.row-item.on { border-color: var(--rose); background: var(--blush); }
+.th { flex: none; width: 44px; height: 44px; }
+.grow { flex: 1 1 220px; min-width: 0; }
+.form { flex: 2 1 480px; min-width: 0; padding: 28px; display: flex; flex-direction: column; gap: 20px; }
+.between { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.between h2 { font-size: 24px; font-weight: 600; }
+.lbl { font-size: 15px; font-weight: 500; }
+.sw { width: 44px; height: 44px; padding: 0; border: 0; border-radius: 12px; cursor: pointer; }
+.sw.on { outline: 3px solid var(--ink); outline-offset: 3px; }
+.actions { gap: 12px; border-top: 1px solid var(--line); padding-top: 20px; }

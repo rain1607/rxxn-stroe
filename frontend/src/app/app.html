@@ -1,0 +1,15 @@
+<div class="shell">
+  <header>
+    <a routerLink="/" class="logo">RXXN<span>.</span>STUDIO</a>
+    <nav>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">สินค้าทั้งหมด</a>
+      <a routerLink="/admin" routerLinkActive="active">Admin</a>
+      <a routerLink="/cart" class="cart-link" data-testid="cart-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z" /><path d="M6 6 5 3H2" /><circle cx="9" cy="20" r="1.5" /><circle cx="18" cy="20" r="1.5" /></svg>
+        ตะกร้า ({{ cart.count() }})
+      </a>
+    </nav>
+  </header>
+  <router-outlet />
+  <footer>© RXXN.STUDIO · ร้านตัวอย่าง</footer>
+</div>
